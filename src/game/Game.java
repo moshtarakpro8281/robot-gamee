@@ -10,11 +10,9 @@ public class Game extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-
-        Scene scene = new Scene(root, 320, 200); // اندازه پنجره مشخص شد
-
-        stage.setTitle("نبرد ربات‌ها "); // عنوان پنجره
+        Parent root = FXMLLoader.load(getClass().getResource("Game.fxml")); // استفاده از Game.fxml
+        Scene scene = new Scene(root, 450, 450); // اندازه متناسب با FXML
+        stage.setTitle("نبرد ربات‌ها");
         stage.setScene(scene);
         stage.show();
     }
@@ -23,4 +21,3 @@ public class Game extends Application {
         launch(args);
     }
 }
-

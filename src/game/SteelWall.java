@@ -1,43 +1,13 @@
 package game;
 
-import javafx.scene.paint.Color;
-
-/**
- * Represents a steel wall that is destroyed after 3 hits.
- * @author SADR
- */
-public class SteelWall extends Entity {
-    private int health = 3;
-    private static final Color COLOR = Color.GRAY;
-
+public class SteelWall extends Obstacle {
     public SteelWall(int x, int y) {
-        super(x, y);
-    }
-
-    public void takeDamage() {
-        if (health > 0) {
-            health--;
-            if (health == 0) {
-                System.out.println("Steel wall at (" + x + ", " + y + ") destroyed!");
-            }
-        }
-    }
-
-    public boolean isDestroyed() {
-        return health <= 0;
-    }
-
-    public Color getColor() {
-        return COLOR;
-    }
-
-    public int getHealth() {
-        return health;
+        super(x, y, ObstacleType.STEEL_WALL);
     }
 
     @Override
-    public char getSymbol() {
-        return 'S';
+    public void applyEffect(Robot robot) {
+        // دیوار فولادی آسیب نمی‌زنه، فقط مانع حرکت می‌شه
+        System.out.println("ربات به دیوار فولادی در (" + getX() + ", " + getY() + ") برخورد کرد!");
     }
 }
-

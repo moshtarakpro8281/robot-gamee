@@ -1,38 +1,16 @@
 package game;
 
-import javafx.scene.paint.Color;
-
-public class WoodenWall extends Entity {
-    private int health = 1;
-    private static final Color COLOR = Color.BROWN;
-
+public class WoodenWall extends Obstacle {
     public WoodenWall(int x, int y) {
-        super(x, y);
-    }
-
-    public void takeDamage() {
-        if (health > 0) {
-            health--;
-            if (health == 0) {
-                System.out.println("Wooden wall at (" + x + ", " + y + ") destroyed!");
-            }
-        }
-    }
-
-    public boolean isDestroyed() {
-        return health <= 0;
-    }
-
-    public Color getColor() {
-        return COLOR;
-    }
-
-    public int getHealth() {
-        return health;
+        super(x, y, ObstacleType.WOODEN_WALL);
     }
 
     @Override
-    public char getSymbol() {
-        return 'W';
+    public void applyEffect(Robot robot) {
+        // دیوار چوبی آسیب کمتری می‌زنه (مثلاً 10%)
+        if (robot.isAlive()) {
+            robot.takeDamage(10);
+            System.out.println("ربات به دیوار چوبی در (" + getX() + ", " + getY() + ") برخورد کرد و 10% سلامتش کم شد!");
+        }
     }
 }
