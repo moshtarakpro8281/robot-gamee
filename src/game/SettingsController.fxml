@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="15" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.RenderFxml">
+    <children>
+        <ToggleGroup fx:id="gameTypeGroup" />
+        <RadioButton fx:id="pvpRadio" text="PvP" toggleGroup="$gameTypeGroup" />
+        <RadioButton fx:id="pvAIRadio" text="PvAI" toggleGroup="$gameTypeGroup" />
+        <RadioButton fx:id="aiVsAiRadio" text="AI vs AI" toggleGroup="$gameTypeGroup" />
+        <Spinner fx:id="widthSpinner" editable="true" />
+        <Spinner fx:id="heightSpinner" editable="true" />
+        <Button text="تأیید" onAction="#handleConfirm" />
+    </children>
+</VBox>

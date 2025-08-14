@@ -7,9 +7,8 @@ public class WoodenWall extends Obstacle {
 
     @Override
     public void applyEffect(Robot robot) {
-        // دیوار چوبی آسیب کمتری می‌زنه (مثلاً 10%)
         if (robot.isAlive()) {
-            robot.takeDamage(10);
+            robot.takeDamage(10); // آسیب 10% فقط برای برخورد (نه شلیک)
             System.out.println("ربات به دیوار چوبی در (" + getX() + ", " + getY() + ") برخورد کرد و 10% سلامتش کم شد!");
         }
     }

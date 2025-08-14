@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.GameController">
+    <top>
+        <HBox alignment="CENTER" spacing="10">
+            <Label fx:id="ammoLabel" text="Ammo: 0" />
+        </HBox>
+    </top>
+    <center>
+        <GridPane fx:id="mapGrid" />
+    </center>
+    <bottom>
+        <VBox alignment="CENTER" spacing="10">
+            <HBox spacing="10">
+                <Button fx:id="moveLeftButton" text="←" onAction="#moveRobotLeft" />
+                <Button fx:id="moveUpButton" text="↑" onAction="#moveRobotUp" />
+                <Button fx:id="moveDownButton" text="↓" onAction="#moveRobotDown" />
+                <Button fx:id="moveRightButton" text="→" onAction="#moveRobotRight" />
+            </HBox>
+            <HBox spacing="10">
+                <Button fx:id="selectRobot1Button" text="1" onAction="#selectRobot1" />
+                <Button fx:id="selectRobot2Button" text="2" onAction="#selectRobot2" />
+                <Button fx:id="selectRobot3Button" text="3" onAction="#selectRobot3" />
+                <Button fx:id="selectRobot4Button" text="4" onAction="#selectRobot4" />
+            </HBox>
+            <HBox spacing="10">
+                <Button fx:id="shootButton" text="Shoot" onAction="#shoot" />
+                <Button fx:id="shootUpButton" text="↑" onAction="#shootUp" />
+                <Button fx:id="shootDownButton" text="↓" onAction="#shootDown" />
+                <Button fx:id="shootLeftButton" text="←" onAction="#shootLeft" />
+                <Button fx:id="shootRightButton" text="→" onAction="#shootRight" />
+            </HBox>
+            <HBox spacing="10">
+                <Button fx:id="handleStart" text="Start" onAction="#handleStart" />
+                <Button fx:id="handleSettings" text="Settings" onAction="#handleSettings" />
+                <Button fx:id="handleExit" text="Exit" onAction="#handleExit" />
+            </HBox>
+            <VBox fx:id="healthVBox" />
+            <VBox fx:id="scoreVBox" alignment="CENTER" spacing="5">
+                <Label fx:id="scoreLabel1" text="Robot 1: 0" />
+                <Label fx:id="scoreLabel2" text="Robot 2: 0" />
+                <Label fx:id="scoreLabel3" text="Robot 3: 0" />
+                <Label fx:id="scoreLabel4" text="Robot 4: 0" />
+            </VBox>
+        </VBox>
+    </bottom>
+</BorderPane>

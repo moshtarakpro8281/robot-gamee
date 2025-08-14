@@ -2,7 +2,7 @@ package game;
 
 public abstract class Obstacle extends Entity {
     public enum ObstacleType {
-        MINE, STEEL_WALL, WOODEN_WALL
+        MINE, STEEL_WALL, NormalWall, WOODEN_WALL
     }
 
     private ObstacleType type;

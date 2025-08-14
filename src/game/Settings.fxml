@@ -1,3 +1,5 @@
+<VBox spacing="15" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.RenderFxml">
+
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>

@@ -3,7 +3,7 @@ package game;
 import java.util.Random;
 
 public class Board {
-    private Cell[][] cells;
+    private Cell[][] grid;
     private int width;
     private int height;
     private Random random = new Random();
@@ -11,45 +11,87 @@ public class Board {
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
-        this.cells = new Cell[height][width];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                cells[y][x] = new Cell(x, y);
+        this.grid = new Cell[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                grid[i][j] = new Cell(j, i);
             }
         }
     }
 
-    public int getWidth() { return width; }
-    public int getHeight() { return height; }
-    public Cell getCell(int x, int y) { return isInBounds(x, y) ? cells[y][x] : null; }
-
-    public boolean isInBounds(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
-    }
-
     public void addObstacles(GameConfig config) {
-        for (int i = 0; i < config.getMineCount(); i++) {
+        // افزودن 2 دیوار چوبی
+        for (int i = 0; i < 2; i++) {
             int x, y;
             do {
-                x = random.nextInt(width);
-                y = random.nextInt(height);
-            } while (getCell(x, y).getEntity() != null);
-            getCell(x, y).setEntity(new Mine(x, y, Obstacle.ObstacleType.MINE));
+                x = random.nextInt(config.getMapWidth());
+                y = random.nextInt(config.getMapHeight());
+            } while (grid[y][x].getEntity() != null);
+            grid[y][x].setEntity(new WoodenWall(x, y));
+        }
+        // افزودن 2 دیوار فولادی
+        for (int i = 0; i < 2; i++) {
+            int x, y;
+            do {
+                x = random.nextInt(config.getMapWidth());
+                y = random.nextInt(config.getMapHeight());
+            } while (grid[y][x].getEntity() != null);
+            grid[y][x].setEntity(new SteelWall(x, y));
+        }
+        // افزودن 1 دیوار معمولی به‌عنوان مانع
+        int x, y;
+        do {
+            x = random.nextInt(config.getMapWidth());
+            y = random.nextInt(config.getMapHeight());
+        } while (grid[y][x].getEntity() != null);
+        grid[y][x].setEntity(new NormalWall(x, y));
+        // افزودن مین‌های مخفی
+        for (int i = 0; i < config.getMineCount(); i++) {
+            int x1, y1;
+            do {
+                x1 = random.nextInt(config.getMapWidth());
+                y1 = random.nextInt(config.getMapHeight());
+            } while (grid[y1][x1].getEntity() != null);
+            grid[y1][x1].setEntity(new HiddenMine(x1, y1));
+        }
+        // افزودن مین‌های آشکار
+        for (int i = 0; i < config.getMineCount() / 2; i++) {
+            int x1, y1;
+            do {
+                x1 = random.nextInt(config.getMapWidth());
+                y1 = random.nextInt(config.getMapHeight());
+            } while (grid[y1][x1].getEntity() != null || grid[y1][x1].getEntity() instanceof VisibleMine);
+            grid[y1][x1].setEntity(new VisibleMine(x1, y1));
         }
     }
 
     public void generateTestMap() {
-        // مین‌ها رو به‌صورت دستی اضافه می‌کنم
-        getCell(2, 2).setEntity(new Mine(2, 2, Obstacle.ObstacleType.MINE));
-        getCell(4, 4).setEntity(new Mine(4, 4, Obstacle.ObstacleType.MINE));
-        getCell(6, 6).setEntity(new Mine(6, 6, Obstacle.ObstacleType.MINE));
+        // اضافه کردن چند مانع برای تست
+        grid[1][1].setEntity(new SteelWall(1, 1));
+        grid[2][2].setEntity(new WoodenWall(2, 2));
+        grid[3][3].setEntity(new SteelWall(3, 3));
+        grid[4][4].setEntity(new WoodenWall(4, 4));
+        grid[5][5].setEntity(new NormalWall(5, 5)); // دیوار معمولی به‌عنوان مانع
+        grid[6][6].setEntity(new HiddenMine(6, 6)); // مین مخفی
+        grid[7][7].setEntity(new VisibleMine(7, 7)); // مین آشکار
+    }
+
+    public Cell getCell(int x, int y) {
+        if (y >= 0 && y < height && x >= 0 && x < width) {
+            return grid[y][x];
+        }
+        return null;
+    }
+
+    public Entity getEntityAt(int x, int y) {
+        Cell cell = getCell(x, y);
+        return cell != null ? cell.getEntity() : null;
     }
 
     public boolean moveRobot(Robot robot, int newX, int newY) {
-        if (!isInBounds(newX, newY)) return false;
         Cell currentCell = getCell(robot.getX(), robot.getY());
         Cell newCell = getCell(newX, newY);
-        if (newCell.getEntity() == null) {
+        if (newCell != null && newCell.getEntity() == null) {
             currentCell.removeEntity();
             newCell.setEntity(robot);
             robot.setPosition(newX, newY);
@@ -59,23 +101,40 @@ public class Board {
     }
 
     public boolean shoot(Robot shooter, int targetX, int targetY) {
-        if (!isInBounds(targetX, targetY)) return false;
-        Entity target = getCell(targetX, targetY).getEntity();
-        if (target != null && target != shooter) {
+        Entity target = getEntityAt(targetX, targetY);
+        if (target != null) {
             if (target instanceof Obstacle) {
-                ((Obstacle) target).applyEffect(shooter); // اعمال اثر موانع
-            } else if (target instanceof Robot) {
-                ((Robot) target).takeDamage(33); // آسیب به ربات هدف
+                ((Obstacle) target).applyEffect(shooter);
+                if (target instanceof WoodenWall) {
+                    getCell(targetX, targetY).removeEntity();
+                    return true;
+                } else if (target instanceof SteelWall) {
+                    SteelWall steelWall = (SteelWall) target;
+                    steelWall.hit();
+                    if (steelWall.isDestroyed()) {
+                        getCell(targetX, targetY).removeEntity();
+                        return true;
+                    }
+                }
             }
-            return true; // برخورد موفق
         }
         return false;
     }
 
-    public Entity getEntityAt(int x, int y) {
-        if (isInBounds(x, y)) {
-            return getCell(x, y).getEntity();
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
+
+    public static class Cell {
+        private int x, y;
+        private Entity entity;
+
+        public Cell(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
-        return null;
+
+        public Entity getEntity() { return entity; }
+        public void setEntity(Entity entity) { this.entity = entity; }
+        public void removeEntity() { this.entity = null; }
     }
 }

@@ -2,7 +2,7 @@ package game;
 
 public abstract class Entity {
     private int x;
-    private int y;
+    int y;
 
     public Entity(int x, int y) {
         this.x = x;

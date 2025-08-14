@@ -10,9 +10,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/game/Game.fxml")); // مسیر اصلاح شده
+        Parent root = FXMLLoader.load(getClass().getResource("/game/Game.fxml"));
         primaryStage.setTitle("Robot Game");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 600, 500)); // اندازه پنجره رو تنظیم کن
         primaryStage.show();
     }
 
